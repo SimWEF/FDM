@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FDM Maintenance</title>
+
+<style>
+body {
+  font-family: Arial;
+  padding: 20px;
+}
+
+input, textarea, button {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+#results div {
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>Recherche équipement</h2>
+
+<input type="text" id="search" placeholder="Tape ID ou nom">
+
+<div id="results"></div>
+
+<h2>Fiche maintenance</h2>
+
+<input type="text" id="equipement" placeholder="Equipement sélectionné" readonly>
+
+<textarea id="description" placeholder="Description panne"></textarea>
+
+<textarea id="action" placeholder="Action corrective"></textarea>
+
+<button onclick="envoyer()">Envoyer</button>
+
+<script>
+
+// 🔧 Remplace avec tes équipements (export Excel simplifié)
+const equipements = [
+  "B31 - Adaptateur droit",
+  "B33 - Adaptateur droit",
+  "A24 - Aspi TO",
+  "C05 - Caméra DAV",
+];
+
+// 🔎 recherche dynamique
+document.getElementById("search").oninput = function() {
+  const val = this.value.toLowerCase();
+
+  const results = equipements.filter(e =>
+    e.toLowerCase().includes(val)
+  );
+
+  document.getElementById("results").innerHTML =
+    results.map(e => `<div onclick="selectEquip('${e}')">${e}</div>`).join("");
+};
+
+// ✅ sélection
+function selectEquip(eq) {
+  document.getElementById("equipement").value = eq;
+}
+
+// 📤 envoi (mock pour l'instant)
+function envoyer() {
+  const data = {
+    equipement: document.getElementById("equipement").value,
+    description: document.getElementById("description").value,
+    action: document.getElementById("action").value
+  };
+
+  console.log(data);
+
+  alert("FDM envoyée ✅");
+
+  // reset
+  document.getElementById("description").value = "";
+  document.getElementById("action").value = "";
+}
+
+</script>
+
+</body>
+</html>
