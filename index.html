@@ -149,36 +149,23 @@ function selectEquip(eq) {
 function envoyer() {
 
   const equipement = document.getElementById("equipement").value;
-  const description = document.getElementById("description").value;
 
   if (!equipement) {
     alert("⚠️ Sélectionner un équipement");
     return;
   }
 
-  if (!description) {
-    alert("⚠️ Décrire la panne");
-    return;
-  }
+  // ✅ ton URL de base (SANS Test à la fin)
+  let baseUrl = "https://forms.office.com/Pages/ResponsePage.aspx?id=esFuUS-5i0OFlOEbb2vseRjkMUtrzTFJgkDRO6ovM4RUQzRENktIUTY4V0YwUFVVQ01QSlk5WkVPWC4u";
 
-  const data = {
-    date: new Date().toISOString(),
-    equipement: equipement,
-    description: description,
-    action: document.getElementById("action").value,
-    priorite: document.getElementById("priorite").value,
-    statut: document.getElementById("statut").value
-  };
+  // ✅ ID du champ équipement
+  let champEquipement = "r6224cbff49d94b79a69654caa3241ddf";
 
-  console.log("Données envoyées :", data);
+  // ✅ construction de l'URL finale
+  let url = baseUrl + "&" + champEquipement + "=" + encodeURIComponent(equipement);
 
-  alert("✅ FDM envoyée");
-
-  // reset partiel
-  document.getElementById("description").value = "";
-  document.getElementById("action").value = "";
-  document.getElementById("priorite").value = "";
-  document.getElementById("statut").value = "";
+  // ✅ ouvre le formulaire pré-rempli
+  window.open(url, "_blank");
 }
 
 </script>
