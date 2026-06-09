@@ -1,40 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>FDM Maintenance</title>
+  <meta charset="UTF-8">
+  <title>FDM Maintenance</title>
 
-<style>
-body {
-  font-family: Arial;
-  padding: 20px;
-}
+  <style>
+    body {
+      font-family: Arial;
+      padding: 15px;
+      max-width: 600px;
+      margin: auto;
+    }
 
-input, textarea, button {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-  font-size: 16px;
-}
+    h2 {
+      margin-top: 20px;
+    }
 
-#results div {
-  padding: 8px;
-  border-bottom: 1px solid #ccc;
-  cursor: pointer;
-}
-</style>
+    input, textarea, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
 
+    textarea {
+      min-height: 80px;
+    }
+
+    #results div {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    #results div:hover {
+      background-color: #f0f0f0;
+    }
+
+    .selected {
+      background-color: #d0f0ff;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #00aaff;
+    }
+
+    button {
+      background-color: #0078D7;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    button:active {
+      background-color: #005a9e;
+    }
+  </style>
 </head>
 
 <body>
 
-<h2>Recherche équipement</h2>
+<h2>🔧 FDM Maintenance v2</h2>
 
-<input type="text" id="search" placeholder="Tape ID ou nom">
+<!-- 🔎 Recherche -->
+<h3>Recherche équipement</h3>
+
+<input type="text" id="search" placeholder="Tape ID ou nom (min 2 caractères)">
 
 <div id="results"></div>
 
-<h2>Fiche maintenance</h2>
+<div id="selectedBox" class="selected" style="display:none;"></div>
+
+<!-- 📝 Formulaire -->
+<h3>Fiche maintenance</h3>
 
 <input type="text" id="equipement" placeholder="Equipement sélectionné" readonly>
 
@@ -42,53 +81,104 @@ input, textarea, button {
 
 <textarea id="action" placeholder="Action corrective"></textarea>
 
+<select id="priorite">
+  <option value="">Priorité</option>
+  <option>A - Critique</option>
+  <option>B - Important</option>
+  <option>C - Mineur</option>
+</select>
+
+<select id="statut">
+  <option value="">Statut</option>
+  <option>A faire</option>
+  <option>En cours</option>
+  <option>Terminé</option>
+</select>
+
 <button onclick="envoyer()">Envoyer</button>
 
 <script>
 
-// 🔧 Remplace avec tes équipements (export Excel simplifié)
-
+// ✅ Chargement des équipements depuis JSON
 let equipements = [];
 
 fetch("equipements.json")
   .then(res => res.json())
   .then(data => {
     equipements = data;
+    console.log("Equipements chargés :", equipements.length);
   });
 
-
-// 🔎 recherche dynamique
+// 🔎 Recherche dynamique
 document.getElementById("search").oninput = function() {
+
   const val = this.value.toLowerCase();
 
-  const results = equipements.filter(e =>
-    e.toLowerCase().includes(val)
-  );
+  if (val.length < 2) {
+    document.getElementById("results").innerHTML = "";
+    return;
+  }
+
+  const results = equipements
+    .filter(e => e.toLowerCase().includes(val))
+    .slice(0, 15);
 
   document.getElementById("results").innerHTML =
-    results.map(e => `<div onclick="selectEquip('${e}')">${e}</div>`).join("");
+    results.map(e => `
+      <div onclick="selectEquip('${e.replace(/'/g, "\\'")}')">
+        ${e}
+      </div>
+    `).join("");
 };
 
-// ✅ sélection
+// ✅ Sélection équipement
 function selectEquip(eq) {
+
   document.getElementById("equipement").value = eq;
+
+  document.getElementById("results").innerHTML = "";
+  document.getElementById("search").value = "";
+
+  document.getElementById("selectedBox").style.display = "block";
+  document.getElementById("selectedBox").innerText = "✅ " + eq;
+
+  document.getElementById("description").focus();
 }
 
-// 📤 envoi (mock pour l'instant)
+// 📤 Envoi
 function envoyer() {
+
+  const equipement = document.getElementById("equipement").value;
+  const description = document.getElementById("description").value;
+
+  if (!equipement) {
+    alert("⚠️ Sélectionner un équipement");
+    return;
+  }
+
+  if (!description) {
+    alert("⚠️ Décrire la panne");
+    return;
+  }
+
   const data = {
-    equipement: document.getElementById("equipement").value,
-    description: document.getElementById("description").value,
-    action: document.getElementById("action").value
+    date: new Date().toISOString(),
+    equipement: equipement,
+    description: description,
+    action: document.getElementById("action").value,
+    priorite: document.getElementById("priorite").value,
+    statut: document.getElementById("statut").value
   };
 
-  console.log(data);
+  console.log("Données envoyées :", data);
 
-  alert("FDM envoyée ✅");
+  alert("✅ FDM envoyée");
 
-  // reset
+  // reset partiel
   document.getElementById("description").value = "";
   document.getElementById("action").value = "";
+  document.getElementById("priorite").value = "";
+  document.getElementById("statut").value = "";
 }
 
 </script>
