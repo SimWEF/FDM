@@ -12,10 +12,6 @@
       margin: auto;
     }
 
-    h2 {
-      margin-top: 20px;
-    }
-
     input, textarea, select, button {
       width: 100%;
       padding: 12px;
@@ -26,23 +22,6 @@
 
     textarea {
       min-height: 80px;
-    }
-
-    #results div {
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
-      cursor: pointer;
-    }
-
-    #results div:hover {
-      background-color: #f0f0f0;
-    }
-
-    .selected {
-      background-color: #d0f0ff;
-      padding: 10px;
-      margin-top: 10px;
-      border: 1px solid #00aaff;
     }
 
     button {
@@ -56,145 +35,143 @@
     button:active {
       background-color: #005a9e;
     }
+
+    .dropdown {
+      border: 1px solid #ccc;
+      max-height: 150px;
+      overflow-y: auto;
+      display: none;
+      background: white;
+      position: relative;
+      z-index: 1000;
+    }
+
+    .dropdown div {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .dropdown div:hover {
+      background-color: #f0f0f0;
+    }
+
+    h3 {
+      margin-top: 20px;
+    }
+
   </style>
 </head>
 
 <body>
 
-<h2>🔧 FDM Maintenance v2</h2>
+<h2>🔧 FDM Maintenance</h2>
 
-<!-- 🔎 Recherche -->
-<h3>Recherche équipement</h3>
+<h3>Equipement</h3>
+<input type="text" id="equipement" placeholder="Choisir ou rechercher équipement">
+<div id="equipementList" class="dropdown"></div>
 
-<input type="text" id="search" placeholder="Tape ID ou nom (min 2 caractères)">
+<h3>Description panne</h3>
+<textarea id="description"></textarea>
 
-<div id="results"></div>
-
-<div id="selectedBox" class="selected" style="display:none;"></div>
-
-<!-- 📝 Formulaire -->
-<h3>Fiche maintenance</h3>
-
-<input type="text" id="equipement" placeholder="Equipement sélectionné" readonly>
-
-<textarea id="description" placeholder="Description panne"></textarea>
-
+<h3>Date de détection</h3>
 <input type="date" id="date">
 
 <h3>Site de détection</h3>
+<input type="text" id="site" placeholder="Choisir ou rechercher site">
+<div id="siteList" class="dropdown"></div>
 
-<input type="text" id="searchSite" placeholder="Rechercher site">
-
-<div id="resultsSite"></div>
-
-<input type="text" id="site" readonly placeholder="Site sélectionné">
-
-
+<h3>Matériel utilisable</h3>
 <select id="materiel">
-  <option value="">Matériel utilisable</option>
+  <option value="">Choisir</option>
   <option value="Oui">Oui</option>
   <option value="Oui en mode dégradé">Oui en mode dégradé</option>
   <option value="Non">Non</option>
 </select>
 
-<textarea id="action1" placeholder="Action corrective immédiate"></textarea>
+<h3>Action corrective immédiate</h3>
+<textarea id="action1"></textarea>
 
-<textarea id="action2" placeholder="Action à mettre en place"></textarea>
+<h3>Action à mettre en place</h3>
+<textarea id="action2"></textarea>
 
-<input type="text" id="redacteur" placeholder="Rédacteur">
-``
+<h3>Rédacteur</h3>
+<input type="text" id="redacteur">
 
 <button onclick="envoyer()">Envoyer</button>
 
 <script>
 
-// ✅ Chargement des équipements depuis JSON
+// ✅ variables globales
 let equipements = [];
-
-fetch("equipements.json")
-  .then(res => res.json())
-  .then(data => {
-    equipements = data;
-    console.log("Equipements chargés :", equipements.length);
-  });
-
-// ✅ Chargement des sites depuis JSON
 let sites = [];
 
+// ✅ AUTOCOMPLETE GENERIQUE
+function createAutocomplete(inputId, listId, dataList) {
 
-fetch("sites.json")
-  .then(res => res.json())
-  .then(data => {
-    sites = data;
-    console.log("Sites Chargés :", sites.length);
+  const input = document.getElementById(inputId);
+  const list = document.getElementById(listId);
+
+  input.addEventListener("focus", () => {
+    showList("");
   });
-// 🔎 Recherche dynamique
-// Equipements
-document.getElementById("search").oninput = function() {
 
-  const val = this.value.toLowerCase();
+  input.addEventListener("input", () => {
+    showList(input.value);
+  });
 
-  if (val.length < 2) {
-    document.getElementById("results").innerHTML = "";
-    return;
+  function showList(filter) {
+
+    const val = filter.toLowerCase();
+
+    const results = dataList
+      .filter(item => item.toLowerCase().includes(val))
+      .slice(0, 20);
+
+    if (results.length === 0) {
+      list.innerHTML = "<div>Aucun résultat</div>";
+    } else {
+      list.innerHTML = results.map(item => `
+        <div onclick="selectItem('${item.replace(/'/g, "\\'")}', '${inputId}', '${listId}')">
+          ${item}
+        </div>
+      `).join("");
+    }
+
+    list.style.display = "block";
   }
-
-  const results = equipements
-    .filter(e => e.toLowerCase().includes(val))
-    .slice(0, 15);
-
-  document.getElementById("results").innerHTML =
-    results.map(e => `
-      <div onclick="selectEquip('${e.replace(/'/g, "\\'")}')">
-        ${e}
-      </div>
-    `).join("");
-};
-
-// Sites
-document.getElementById("searchSite").oninput = function() {
-
-const val = this.value.toLowerCase();
-
-if (val.length < 1) {
-  document.getElementById("resultsSite").innerHTML = "";
-  return;
 }
 
-const results = sites
-  .filter(s => s.toLowerCase().includes(val))
-  .slice(0, 10);
-
-document.getElementById("resultsSite").innerHTML =
-  results.map(s => `
-    <div onclick="selectSite('${s}')">
-      ${s}
-    </div>
-  `).join("");
-};
-
-// ✅ Sélection équipement
-function selectEquip(eq) {
-
-  document.getElementById("equipement").value = eq;
-
-  document.getElementById("results").innerHTML = "";
-  document.getElementById("search").value = "";
-
-  document.getElementById("selectedBox").style.display = "block";
-  document.getElementById("selectedBox").innerText = "✅ " + eq;
-
-  document.getElementById("description").focus();
-}
-// ✅ Sélection sites
-function selectSite(site) {
-  document.getElementById("site").value = site;
-  document.getElementById("resultsSite").innerHTML = "";
-  document.getElementById("searchSite").value = "";
+// ✅ sélection
+function selectItem(value, inputId, listId) {
+  document.getElementById(inputId).value = value;
+  document.getElementById(listId).style.display = "none";
 }
 
+// ✅ charger JSON
+Promise.all([
+  fetch("equipements.json").then(res => res.json()),
+  fetch("sites.json").then(res => res.json())
+]).then(([equipData, siteData]) => {
 
-// 📤 Envoi
+  equipements = equipData;
+  sites = siteData;
+
+  console.log("Equipements :", equipements.length);
+  console.log("Sites :", sites.length);
+
+  createAutocomplete("equipement", "equipementList", equipements);
+  createAutocomplete("site", "siteList", sites);
+
+});
+
+// ✅ fermer liste si clic ailleurs
+document.addEventListener("click", function(e) {
+  if (!e.target.closest(".dropdown") && !e.target.closest("input")) {
+    document.querySelectorAll(".dropdown").forEach(d => d.style.display = "none");
+  }
+});
+
+// ✅ ENVOI
 function envoyer() {
 
   const equipement = document.getElementById("equipement").value;
@@ -206,7 +183,6 @@ function envoyer() {
   const action2 = document.getElementById("action2").value;
   const redacteur = document.getElementById("redacteur").value;
 
-  // ✅ Vérification champs obligatoires
   if (!equipement || !description || !date || !site || !materiel || !redacteur) {
     alert("⚠️ Merci de remplir les champs obligatoires");
     return;
@@ -224,7 +200,6 @@ function envoyer() {
     + "&rdd29c9cd9da649e8a41549e52d9f6374=" + encodeURIComponent(action2)
     + "&r38c32352ebca4f7e88f37c0de9bf0bf0=" + encodeURIComponent(redacteur);
 
-  // ✅ Redirection fluide
   window.location.href = url;
 }
 
