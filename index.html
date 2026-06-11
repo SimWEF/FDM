@@ -8,13 +8,12 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  padding: 10px;
+  padding: 8px;
   background: #f4f6f8;
 }
 
-/* conteneur global */
 .container {
-  max-width: 480px;   /* ✅ largeur mobile contrôlée */
+  max-width: 420px; /* ✅ parfait mobile */
   margin: auto;
 }
 
@@ -24,74 +23,80 @@ h2 {
   font-size: 18px;
 }
 
-/* indication obligatoire */
+/* info */
 .info {
   text-align: center;
   color: red;
+  font-size: 12px;
+}
+
+/* ligne compacte */
+.row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+/* label à gauche */
+.label {
+  width: 40%;
   font-size: 13px;
+  font-weight: bold;
 }
 
-/* blocs */
-.section {
-  background: white;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* champ à droite */
+.field {
+  width: 60%;
 }
 
-/* titres champs */
-h3 {
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-/* champs */
+/* inputs */
 input, textarea, select {
   width: 100%;
-  padding: 10px;
-  font-size: 15px;
-  border-radius: 8px;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
   border: 1px solid #ccc;
-  box-sizing: border-box; /* ✅ évite débordement */
+  box-sizing: border-box;
 }
 
-/* textarea */
+/* textarea réduit */
 textarea {
-  min-height: 70px;
+  min-height: 60px;
 }
 
-/* bouton principal */
+/* bouton */
 .btn-main {
-  margin-top: 15px;
   width: 100%;
+  margin-top: 10px;
   padding: 14px;
   font-size: 16px;
   background: #0078D7;
   color: white;
-  border-radius: 10px;
+  border-radius: 8px;
   border: none;
-  font-weight: bold;
 }
 
 /* dropdown */
 .dropdown {
-  border: 1px solid #ccc;
+  position: absolute;
   background: white;
-  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 90%;
   max-height: 150px;
   overflow-y: auto;
   display: none;
+  z-index: 1000;
 }
 
 .dropdown div {
-  padding: 10px;
-  font-size: 14px;
+  padding: 8px;
+  font-size: 13px;
 }
 
 .dropdown div:hover {
   background: #e6f2ff;
 }
+
   </style>
 </head>
 
@@ -99,54 +104,70 @@ textarea {
 
 <div class="container">
 
-  <h2>🔧 FDM Maintenance</h2>
-  <p class="info">* Champs obligatoires</p>
+  <h2>🔧 FDM</h2>
+  <p class="info">* obligatoires</p>
   
-  <div class="section">
-    <h3>Equipement *</h3>
-    <input type="text" id="equipement">
-    <div id="equipementList" class="dropdown"></div>
+  <div class="row">
+    <div class="label">Equipement *</div>
+    <div class="field">
+      <input type="text" id="equipement">
+      <div id="equipementList" class="dropdown"></div>
+    </div>
   </div>
   
-  <div class="section">
-    <h3>Description *</h3>
-    <textarea id="description"></textarea>
+  <div class="row">
+    <div class="label">Description *</div>
+    <div class="field">
+      <textarea id="description"></textarea>
+    </div>
   </div>
   
-  <div class="section">
-    <h3>Date *</h3>
-    <input type="date" id="date">
+  <div class="row">
+    <div class="label">Date *</div>
+    <div class="field">
+      <input type="date" id="date">
+    </div>
   </div>
   
-  <div class="section">
-    <h3>Site *</h3>
-    <input type="text" id="site">
-    <div id="siteList" class="dropdown"></div>
+  <div class="row">
+    <div class="label">Site *</div>
+    <div class="field">
+      <input type="text" id="site">
+      <div id="siteList" class="dropdown"></div>
+    </div>
   </div>
   
-  <div class="section">
-    <h3>Matériel utilisable *</h3>
-    <select id="materiel">
-      <option value="">Choisir</option>
-      <option>Oui</option>
-      <option>Oui dégradé</option>
-      <option>Non</option>
-    </select>
+  <div class="row">
+    <div class="label">Matériel *</div>
+    <div class="field">
+      <select id="materiel">
+        <option value="">Choisir</option>
+        <option>Oui</option>
+        <option>Oui dégradé</option>
+        <option>Non</option>
+      </select>
+    </div>
   </div>
   
-  <div class="section">
-    <h3>Action immédiate</h3>
-    <textarea id="action1"></textarea>
+  <div class="row">
+    <div class="label">Action immédiate</div>
+    <div class="field">
+      <textarea id="action1"></textarea>
+    </div>
   </div>
   
-  <div class="section">
-    <h3>Action à mettre en place</h3>
-    <textarea id="action2"></textarea>
+  <div class="row">
+    <div class="label">Action long terme</div>
+    <div class="field">
+      <textarea id="action2"></textarea>
+    </div>
   </div>
   
-  <div class="section">
-    <h3>Rédacteur *</h3>
-    <input type="text" id="redacteur">
+  <div class="row">
+    <div class="label">Rédacteur *</div>
+    <div class="field">
+      <input type="text" id="redacteur">
+    </div>
   </div>
   
   <button class="btn-main" onclick="envoyer()">
@@ -154,7 +175,6 @@ textarea {
   </button>
   
   </div>
-
 <script>
 
 // ✅ variables globales
