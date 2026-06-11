@@ -41,14 +41,14 @@ h2 {
 
 /* ✅ label */
 .label {
-  width: 40%;
+  width: 10%;
   font-size: 14px;
   font-weight: bold;
 }
 
 /* ✅ champ */
 .field {
-  width: 60%;
+  width: 90%;
   position: relative;
 }
 
@@ -167,12 +167,12 @@ textarea {
 </div>
 
 <div class="row">
-  <div class="label">Matériel *</div>
+  <div class="label">Matériel Utilisable?*</div>
   <div class="field">
 
     <div class="btn-group-horizontal">
       <button type="button" onclick="selectMateriel('Oui', this)">Oui</button>
-      <button type="button" onclick="selectMateriel('Oui dégradé', this)">Dégradé</button>
+      <button type="button" onclick="selectMateriel('Oui en mode dégradé', this)">Oui en mode dégradé</button>
       <button type="button" onclick="selectMateriel('Non', this)">Non</button>
     </div>
 
@@ -318,4 +318,3 @@ function envoyer() {
 
 </body>
 </html>
-``
