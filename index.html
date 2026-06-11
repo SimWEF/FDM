@@ -203,7 +203,7 @@ textarea {
 </div>
 
 <div class="row">
-  <div class="label">Action long terme</div>
+  <div class="label">Action à effectuer</div>
   <div class="field">
     <textarea id="action2"></textarea>
   </div>
@@ -307,6 +307,8 @@ function envoyer() {
   const date = document.getElementById("date").value;
   const site = document.getElementById("site").value;
   const materiel = document.getElementById("materiel").value;
+  const action1 = document.getElementById("action1").value;
+  const action2 = document.getElementById("action2").value;
   const redacteur = document.getElementById("redacteur").value;
 
   if (!equipement || !description || !date || !site || !materiel || !redacteur) {
@@ -324,6 +326,8 @@ function envoyer() {
     + "&rb1e2f7df928f43beacbe59f537d8b09b=" + encodeURIComponent(date)
     + "&r3fedaea8875d40899833d017ba9ff9fa=" + encodeURIComponent(site)
     + "&r9ac54388070a43748ea2b5514ff712d8=" + encodeURIComponent(materiel)
+    + "&ra23df662a36640e2912b5bed96b080ee=" + encodeURIComponent(action1)
+    + "&rdd29c9cd9da649e8a41549e52d9f6374=" + encodeURIComponent(action2)
     + "&r38c32352ebca4f7e88f37c0de9bf0bf0=" + encodeURIComponent(redacteur);
 
   window.location.href = url;
