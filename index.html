@@ -75,6 +75,27 @@ textarea {
   border-radius: 8px;
   border: none;
 }
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btn-group button {
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  font-weight: bold;
+}
+
+/* bouton sélectionné */
+.btn-group button.active {
+  background-color: #0078D7;
+  color: white;
+  border-color: #0078D7;
+}
 
 /* dropdown */
 .dropdown {
@@ -140,14 +161,19 @@ textarea {
   <div class="row">
     <div class="label">Matériel *</div>
     <div class="field">
-      <select id="materiel">
-        <option value="">Choisir</option>
-        <option>Oui</option>
-        <option>Oui dégradé</option>
-        <option>Non</option>
-      </select>
+      
+      <div class="btn-group">
+        <button type="button" onclick="selectMateriel('Oui', this)">✅ Oui</button>
+        <button type="button" onclick="selectMateriel('Oui dégradé', this)">⚠️ Dégradé</button>
+        <button type="button" onclick="selectMateriel('Non', this)">❌ Non</button>
+      </div>
+  
+      <!-- valeur cachée -->
+      <input type="hidden" id="materiel">
+  
     </div>
   </div>
+  
   
   <div class="row">
     <div class="label">Action immédiate</div>
@@ -182,10 +208,17 @@ let equipements = [];
 let sites = [];
 
 
-// fonction RAS
-function remplirRAS() {
-  document.getElementById("description").value = "RAS";
-  document.getElementById("materiel").value = "✅ Oui";
+function selectMateriel(value, element) {
+
+// stocker valeur
+document.getElementById("materiel").value = value;
+
+// reset tous les boutons
+document.querySelectorAll(".btn-group button")
+  .forEach(btn => btn.classList.remove("active"));
+
+// activer bouton sélectionné
+element.classList.add("active");
 }
 
 // ✅ AUTOCOMPLETE GENERIQUE
