@@ -65,9 +65,11 @@
 <body>
 
 <h2>🔧 FDM Maintenance</h2>
+<p style="color:red;">* Champs obligatoires</p>
 
 <h3>Equipement *</h3>
-<input type="text" id="equipement" placeholder="Obligatoire">
+<input type="text" id="equipement" placeholder="Choisir ou rechercher équipement">
+<div id="equipementList" class="dropdown"></div>
 
 <h3>Description panne *</h3>
 <textarea id="description"></textarea>
@@ -76,7 +78,8 @@
 <input type="date" id="date">
 
 <h3>Site de détection *</h3>
-<input type="text" id="site" placeholder="Obligatoire">
+<input type="text" id="site" placeholder="Choisir ou rechercher site">
+<div id="siteList" class="dropdown"></div>
 
 <h3>Matériel utilisable *</h3>
 <select id="materiel">
@@ -85,6 +88,12 @@
   <option value="Oui en mode dégradé">Oui en mode dégradé</option>
   <option value="Non">Non</option>
 </select>
+
+<h3>Action corrective immédiate</h3>
+<textarea id="action1"></textarea>
+
+<h3>Action à mettre en place</h3>
+<textarea id="action2"></textarea>
 
 <h3>Rédacteur *</h3>
 <input type="text" id="redacteur">
