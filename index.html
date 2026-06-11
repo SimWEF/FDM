@@ -81,13 +81,14 @@
 
 <input type="date" id="date">
 
-<select id="site">
-  <option value="">Site de détection</option>
-  <option value="CNPE">CNPE</option>
-  <option value="Chantier">Chantier</option>
-  <option value="Atelier">Atelier</option>
-  <option value="Magasin">Magasin</option>
-</select>
+<h3>Site de détection</h3>
+
+<input type="text" id="searchSite" placeholder="Rechercher site">
+
+<div id="resultsSite"></div>
+
+<input type="text" id="site" readonly placeholder="Site sélectionné">
+
 
 <select id="materiel">
   <option value="">Matériel utilisable</option>
@@ -117,7 +118,18 @@ fetch("equipements.json")
     console.log("Equipements chargés :", equipements.length);
   });
 
+// ✅ Chargement des sites depuis JSON
+let sites = [];
+
+
+fetch("sites.json")
+  .then(res => res.json())
+  .then(data => {
+    sites = data;
+    console.log("Sites Chargés :", sites.length);
+  });
 // 🔎 Recherche dynamique
+// Equipements
 document.getElementById("search").oninput = function() {
 
   const val = this.value.toLowerCase();
@@ -139,6 +151,28 @@ document.getElementById("search").oninput = function() {
     `).join("");
 };
 
+// Sites
+document.getElementById("searchSite").oninput = function() {
+
+const val = this.value.toLowerCase();
+
+if (val.length < 1) {
+  document.getElementById("resultsSite").innerHTML = "";
+  return;
+}
+
+const results = sites
+  .filter(s => s.toLowerCase().includes(val))
+  .slice(0, 10);
+
+document.getElementById("resultsSite").innerHTML =
+  results.map(s => `
+    <div onclick="selectSite('${s}')">
+      ${s}
+    </div>
+  `).join("");
+};
+
 // ✅ Sélection équipement
 function selectEquip(eq) {
 
@@ -152,6 +186,13 @@ function selectEquip(eq) {
 
   document.getElementById("description").focus();
 }
+// ✅ Sélection sites
+function selectSite(site) {
+  document.getElementById("site").value = site;
+  document.getElementById("resultsSite").innerHTML = "";
+  document.getElementById("searchSite").value = "";
+}
+
 
 // 📤 Envoi
 function envoyer() {
