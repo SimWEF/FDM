@@ -5,158 +5,155 @@
   <title>FDM Maintenance</title>
 
   <style>
-    body {
-  font-family: Arial, sans-serif;
+body {
+  font-family: Arial;
+  background: #f0f2f5;
   padding: 10px;
-  max-width: 600px;
-  margin: auto;
-  background: #f5f7fa;
 }
 
 h2 {
   text-align: center;
-  margin-bottom: 10px;
+  font-size: 20px;
 }
 
-h3 {
-  margin-top: 20px;
-  margin-bottom: 5px;
-  font-size: 16px;
-}
-
-p {
-  margin: 5px 0;
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 14px;
-  margin: 6px 0;
-  font-size: 16px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  background: white;
-}
-
-textarea {
-  min-height: 90px;
-}
-
-button {
-  width: 100%;
-  padding: 18px;
-  font-size: 18px;
-  margin-top: 15px;
-  background-color: #0078D7;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-weight: bold;
-}
-
-button:active {
-  background-color: #005a9e;
-}
-
-/* Cards (effet bloc) */
-.section {
-  background: white;
-  padding: 10px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-/* Dropdown amélioré */
-.dropdown {
-  border: 1px solid #ccc;
-  max-height: 160px;
-  overflow-y: auto;
-  display: none;
-  background: white;
-  border-radius: 10px;
-}
-
-.dropdown div {
-  padding: 14px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-}
-
-.dropdown div:hover {
-  background-color: #e6f2ff;
-}
-
-/* Champs obligatoires */
-.required {
+.info {
+  text-align: center;
   color: red;
   font-weight: bold;
 }
 
+.section {
+  background: white;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
 
+h3 {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+}
+
+textarea {
+  min-height: 100px;
+}
+
+.btn-main {
+  background: #0078D7;
+  color: white;
+  padding: 18px;
+  font-size: 20px;
+  border-radius: 14px;
+  width: 100%;
+  font-weight: bold;
+}
+
+.btn-secondary {
+  background: #ff9800;
+  color: white;
+  margin-top: 8px;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+.dropdown {
+  background: white;
+  border-radius: 10px;
+  max-height: 180px;
+  overflow-y: auto;
+  margin-top: 5px;
+  display: none;
+  border: 1px solid #ccc;
+}
+
+.dropdown div {
+  padding: 14px;
+  font-size: 16px;
+}
+
+.dropdown div:hover {
+  background: #e6f2ff;
+}
   </style>
 </head>
 
 <body>
 
-  <h2>🔧 FDM Maintenance</h2>
-  <p style="text-align:center;color:red;">* Champs obligatoires</p>
-  
-  <div class="section">
-    <h3>Equipement <span class="required">*</span></h3>
-    <input type="text" id="equipement">
-    <div id="equipementList" class="dropdown"></div>
-  </div>
-  
-  <div class="section">
-    <h3>Description panne <span class="required">*</span></h3>
-    <textarea id="description"></textarea>
-  </div>
-  
-  <div class="section">
-    <h3>Date de détection <span class="required">*</span></h3>
-    <input type="date" id="date">
-  </div>
-  
-  <div class="section">
-    <h3>Site de détection <span class="required">*</span></h3>
-    <input type="text" id="site">
-    <div id="siteList" class="dropdown"></div>
-  </div>
-  
-  <div class="section">
-    <h3>Matériel utilisable <span class="required">*</span></h3>
-    <select id="materiel">
-      <option value="">Choisir</option>
-      <option>Oui</option>
-      <option>Oui en mode dégradé</option>
-      <option>Non</option>
-    </select>
-  </div>
-  
-  <div class="section">
-    <h3>Action corrective immédiate</h3>
-    <textarea id="action1"></textarea>
-  </div>
-  
-  <div class="section">
-    <h3>Action à mettre en place</h3>
-    <textarea id="action2"></textarea>
-  </div>
-  
-  <div class="section">
-    <h3>Rédacteur <span class="required">*</span></h3>
-    <input type="text" id="redacteur">
-  </div>
-  
-  <button onclick="envoyer()">✅ Envoyer la fiche</button>
+<h2>🔧 FDM Maintenance</h2>
+<p class="info">* Champs obligatoires</p>
+
+<div class="section">
+  <h3>Equipement *</h3>
+  <input type="text" id="equipement">
+  <div id="equipementList" class="dropdown"></div>
+</div>
+
+<div class="section">
+  <h3>Description *</h3>
+  <textarea id="description"></textarea>
+
+  <!-- ✅ bouton RAS -->
+  <button class="btn-secondary" onclick="remplirRAS()">RAS</button>
+</div>
+
+<div class="section">
+  <h3>Date *</h3>
+  <input type="date" id="date">
+</div>
+
+<div class="section">
+  <h3>Site *</h3>
+  <input type="text" id="site">
+  <div id="siteList" class="dropdown"></div>
+</div>
+
+<div class="section">
+  <h3>Matériel utilisable *</h3>
+  <select id="materiel">
+    <option value="">Choisir</option>
+    <option>✅ Oui</option>
+    <option>⚠️ Oui dégradé</option>
+    <option>❌ Non</option>
+  </select>
+</div>
+
+<div class="section">
+  <h3>Actions</h3>
+  <textarea id="action1" placeholder="Correction immédiate"></textarea>
+  <textarea id="action2" placeholder="Action à mettre en place"></textarea>
+</div>
+
+<div class="section">
+  <h3>Rédacteur *</h3>
+  <input type="text" id="redacteur">
+</div>
+
+<button class="btn-main" onclick="envoyer()">
+  ✅ ENVOYER LA FICHE vers Forms
+</button>
 
 <script>
 
 // ✅ variables globales
 let equipements = [];
 let sites = [];
+
+
+// fonction RAS
+function remplirRAS() {
+  document.getElementById("description").value = "RAS";
+  document.getElementById("materiel").value = "✅ Oui";
+}
 
 // ✅ AUTOCOMPLETE GENERIQUE
 function createAutocomplete(inputId, listId, dataList) {
@@ -224,36 +221,38 @@ document.addEventListener("click", function(e) {
   }
 });
 
+
+// ✅ Auto date (remplit la date du jour)
+document.getElementById("date").valueAsDate = new Date();
+
 // ✅ ENVOI
 function envoyer() {
 
-  const equipement = document.getElementById("equipement").value;
-  const description = document.getElementById("description").value;
-  const date = document.getElementById("date").value;
-  const site = document.getElementById("site").value;
-  const materiel = document.getElementById("materiel").value;
-  const action1 = document.getElementById("action1").value;
-  const action2 = document.getElementById("action2").value;
-  const redacteur = document.getElementById("redacteur").value;
+const equipement = document.getElementById("equipement").value;
+const description = document.getElementById("description").value;
+const date = document.getElementById("date").value;
+const site = document.getElementById("site").value;
+const materiel = document.getElementById("materiel").value;
+const redacteur = document.getElementById("redacteur").value;
 
-  if (!equipement || !description || !date || !site || !materiel || !redacteur) {
-    alert("⚠️ Merci de remplir les champs obligatoires");
-    return;
-  }
+if (!equipement || !description || !date || !site || !materiel || !redacteur) {
+  alert("⚠️ Champs obligatoires manquants");
+  return;
+}
 
-  let baseUrl = "https://forms.office.com/Pages/ResponsePage.aspx?id=esFuUS-5i0OFlOEbb2vseRjkMUtrzTFJgkDRO6ovM4RUQzRENktIUTY4V0YwUFVVQ01QSlk5WkVPWC4u";
+if (!confirm("✅ Confirmer l'envoi de la fiche ?")) return;
 
-  let url = baseUrl
-    + "&r6224cbff49d94b79a69654caa3241ddf=" + encodeURIComponent(equipement)
-    + "&r936dbfbe7b3a4f0ba57f4406807e37a5=" + encodeURIComponent(description)
-    + "&rb1e2f7df928f43beacbe59f537d8b09b=" + encodeURIComponent(date)
-    + "&r3fedaea8875d40899833d017ba9ff9fa=" + encodeURIComponent(site)
-    + "&r9ac54388070a43748ea2b5514ff712d8=" + encodeURIComponent(materiel)
-    + "&ra23df662a36640e2912b5bed96b080ee=" + encodeURIComponent(action1)
-    + "&rdd29c9cd9da649e8a41549e52d9f6374=" + encodeURIComponent(action2)
-    + "&r38c32352ebca4f7e88f37c0de9bf0bf0=" + encodeURIComponent(redacteur);
+let baseUrl = "https://forms.office.com/Pages/ResponsePage.aspx?id=esFuUS-5i0OFlOEbb2vseRjkMUtrzTFJgkDRO6ovM4RUQzRENktIUTY4V0YwUFVVQ01QSlk5WkVPWC4u";
 
-  window.location.href = url;
+let url = baseUrl
+  + "&r6224cbff49d94b79a69654caa3241ddf=" + encodeURIComponent(equipement)
+  + "&r936dbfbe7b3a4f0ba57f4406807e37a5=" + encodeURIComponent(description)
+  + "&rb1e2f7df928f43beacbe59f537d8b09b=" + encodeURIComponent(date)
+  + "&r3fedaea8875d40899833d017ba9ff9fa=" + encodeURIComponent(site)
+  + "&r9ac54388070a43748ea2b5514ff712d8=" + encodeURIComponent(materiel)
+  + "&r38c32352ebca4f7e88f37c0de9bf0bf0=" + encodeURIComponent(redacteur);
+
+window.location.href = url;
 }
 
 </script>
