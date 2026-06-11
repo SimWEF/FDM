@@ -79,21 +79,29 @@
 
 <textarea id="description" placeholder="Description panne"></textarea>
 
-<textarea id="action" placeholder="Action corrective"></textarea>
+<input type="date" id="date">
 
-<select id="priorite">
-  <option value="">Priorité</option>
-  <option>A - Critique</option>
-  <option>B - Important</option>
-  <option>C - Mineur</option>
+<select id="site">
+  <option value="">Site de détection</option>
+  <option value="CNPE">CNPE</option>
+  <option value="Chantier">Chantier</option>
+  <option value="Atelier">Atelier</option>
+  <option value="Magasin">Magasin</option>
 </select>
 
-<select id="statut">
-  <option value="">Statut</option>
-  <option>A faire</option>
-  <option>En cours</option>
-  <option>Terminé</option>
+<select id="materiel">
+  <option value="">Matériel utilisable</option>
+  <option value="Oui">Oui</option>
+  <option value="Oui en mode dégradé">Oui en mode dégradé</option>
+  <option value="Non">Non</option>
 </select>
+
+<textarea id="action1" placeholder="Action corrective immédiate"></textarea>
+
+<textarea id="action2" placeholder="Action à mettre en place"></textarea>
+
+<input type="text" id="redacteur" placeholder="Rédacteur">
+``
 
 <button onclick="envoyer()">Envoyer</button>
 
@@ -149,23 +157,34 @@ function selectEquip(eq) {
 function envoyer() {
 
   const equipement = document.getElementById("equipement").value;
+  const description = document.getElementById("description").value;
+  const date = document.getElementById("date").value;
+  const site = document.getElementById("site").value;
+  const materiel = document.getElementById("materiel").value;
+  const action1 = document.getElementById("action1").value;
+  const action2 = document.getElementById("action2").value;
+  const redacteur = document.getElementById("redacteur").value;
 
-  if (!equipement) {
-    alert("⚠️ Sélectionner un équipement");
+  // ✅ Vérification champs obligatoires
+  if (!equipement || !description || !date || !site || !materiel || !redacteur) {
+    alert("⚠️ Merci de remplir les champs obligatoires");
     return;
   }
 
-  // ✅ ton URL de base (SANS Test à la fin)
   let baseUrl = "https://forms.office.com/Pages/ResponsePage.aspx?id=esFuUS-5i0OFlOEbb2vseRjkMUtrzTFJgkDRO6ovM4RUQzRENktIUTY4V0YwUFVVQ01QSlk5WkVPWC4u";
 
-  // ✅ ID du champ équipement
-  let champEquipement = "r6224cbff49d94b79a69654caa3241ddf";
+  let url = baseUrl
+    + "&r6224cbff49d94b79a69654caa3241ddf=" + encodeURIComponent(equipement)
+    + "&r936dbfbe7b3a4f0ba57f4406807e37a5=" + encodeURIComponent(description)
+    + "&rb1e2f7df928f43beacbe59f537d8b09b=" + encodeURIComponent(date)
+    + "&r3fedaea8875d40899833d017ba9ff9fa=" + encodeURIComponent(site)
+    + "&r9ac54388070a43748ea2b5514ff712d8=" + encodeURIComponent(materiel)
+    + "&ra23df662a36640e2912b5bed96b080ee=" + encodeURIComponent(action1)
+    + "&rdd29c9cd9da649e8a41549e52d9f6374=" + encodeURIComponent(action2)
+    + "&r38c32352ebca4f7e88f37c0de9bf0bf0=" + encodeURIComponent(redacteur);
 
-  // ✅ construction de l'URL finale
-  let url = baseUrl + "&" + champEquipement + "=" + encodeURIComponent(equipement);
-
-  // ✅ ouvre le formulaire pré-rempli
-  window.open(url, "_blank");
+  // ✅ Redirection fluide
+  window.location.href = url;
 }
 
 </script>
