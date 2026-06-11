@@ -12,16 +12,19 @@ body {
   background: #f4f6f8;
 }
 
+
 .container {
-  max-width: 420px; /* ✅ parfait mobile */
-  margin: auto;
+  width: 100%;
+  max-width: 100%;
 }
 
+
 /* titre */
+
 h2 {
-  text-align: center;
-  font-size: 18px;
+  font-size: 20px;
 }
+
 
 /* info */
 .info {
@@ -39,11 +42,11 @@ h2 {
 
 /* label à gauche */
 
+
 .label {
-  width: 40%;
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 15px;
 }
+
 
 
 /* champ à droite */
@@ -52,16 +55,18 @@ h2 {
 }
 
 /* inputs */
+
 input, textarea, select {
-  width: 100%;
   padding: 12px;
   font-size: 16px;
 }
 
 
+
 /* textarea réduit */
 textarea {
   min-height: 80px;
+  resize: none;
 }
 
 /* bouton */
@@ -75,27 +80,26 @@ textarea {
   border-radius: 8px;
   border: none;
 }
-.btn-group {
+.btn-group-horizontal {
   display: flex;
-  flex-direction: column;
   gap: 6px;
 }
 
-.btn-group button {
+.btn-group-horizontal button {
+  flex: 1;
   padding: 12px;
   font-size: 15px;
   border-radius: 8px;
   border: 1px solid #ccc;
   background: #f0f0f0;
-  font-weight: bold;
 }
 
-/* bouton sélectionné */
-.btn-group button.active {
+.btn-group-horizontal button.active {
   background-color: #0078D7;
   color: white;
   border-color: #0078D7;
 }
+
 
 /* dropdown */
 .dropdown {
@@ -159,20 +163,19 @@ textarea {
   </div>
   
   <div class="row">
-    <div class="label">Matériel *</div>
+    <div class="label">Matériel Utilisable? *</div>
     <div class="field">
-      
-      <div class="btn-group">
-        <button type="button" onclick="selectMateriel('Oui', this)">✅ Oui</button>
-        <button type="button" onclick="selectMateriel('Oui dégradé', this)">⚠️ Dégradé</button>
-        <button type="button" onclick="selectMateriel('Non', this)">❌ Non</button>
+  
+      <div class="btn-group-horizontal">
+        <button type="button" onclick="selectMateriel('Oui', this)">Oui</button>
+        <button type="button" onclick="selectMateriel('Oui dégradé', this)">Dégradé</button>
+        <button type="button" onclick="selectMateriel('Non', this)">Non</button>
       </div>
   
-      <!-- valeur cachée -->
       <input type="hidden" id="materiel">
-  
     </div>
   </div>
+  
   
   
   <div class="row">
