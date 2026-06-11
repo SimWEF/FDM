@@ -6,99 +6,151 @@
 
   <style>
     body {
-      font-family: Arial;
-      padding: 15px;
-      max-width: 600px;
-      margin: auto;
-    }
+  font-family: Arial, sans-serif;
+  padding: 10px;
+  max-width: 600px;
+  margin: auto;
+  background: #f5f7fa;
+}
 
-    input, textarea, select, button {
-      width: 100%;
-      padding: 12px;
-      margin: 6px 0;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
+h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
 
-    textarea {
-      min-height: 80px;
-    }
+h3 {
+  margin-top: 20px;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
 
-    button {
-      background-color: #0078D7;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-    }
+p {
+  margin: 5px 0;
+}
 
-    button:active {
-      background-color: #005a9e;
-    }
+input, textarea, select {
+  width: 100%;
+  padding: 14px;
+  margin: 6px 0;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  background: white;
+}
 
-    .dropdown {
-      border: 1px solid #ccc;
-      max-height: 150px;
-      overflow-y: auto;
-      display: none;
-      background: white;
-      position: relative;
-      z-index: 1000;
-    }
+textarea {
+  min-height: 90px;
+}
 
-    .dropdown div {
-      padding: 10px;
-      cursor: pointer;
-    }
+button {
+  width: 100%;
+  padding: 18px;
+  font-size: 18px;
+  margin-top: 15px;
+  background-color: #0078D7;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+}
 
-    .dropdown div:hover {
-      background-color: #f0f0f0;
-    }
+button:active {
+  background-color: #005a9e;
+}
 
-    h3 {
-      margin-top: 20px;
-    }
+/* Cards (effet bloc) */
+.section {
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Dropdown amélioré */
+.dropdown {
+  border: 1px solid #ccc;
+  max-height: 160px;
+  overflow-y: auto;
+  display: none;
+  background: white;
+  border-radius: 10px;
+}
+
+.dropdown div {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.dropdown div:hover {
+  background-color: #e6f2ff;
+}
+
+/* Champs obligatoires */
+.required {
+  color: red;
+  font-weight: bold;
+}
+
 
   </style>
 </head>
 
 <body>
 
-<h2>🔧 FDM Maintenance</h2>
-<p style="color:red;">* Champs obligatoires</p>
-
-<h3>Equipement *</h3>
-<input type="text" id="equipement" placeholder="Choisir ou rechercher équipement">
-<div id="equipementList" class="dropdown"></div>
-
-<h3>Description panne *</h3>
-<textarea id="description"></textarea>
-
-<h3>Date de détection *</h3>
-<input type="date" id="date">
-
-<h3>Site de détection *</h3>
-<input type="text" id="site" placeholder="Choisir ou rechercher site">
-<div id="siteList" class="dropdown"></div>
-
-<h3>Matériel utilisable *</h3>
-<select id="materiel">
-  <option value="">Choisir</option>
-  <option value="Oui">Oui</option>
-  <option value="Oui en mode dégradé">Oui en mode dégradé</option>
-  <option value="Non">Non</option>
-</select>
-
-<h3>Action corrective immédiate</h3>
-<textarea id="action1"></textarea>
-
-<h3>Action à mettre en place</h3>
-<textarea id="action2"></textarea>
-
-<h3>Rédacteur *</h3>
-<input type="text" id="redacteur">
-
-<button onclick="envoyer()">Envoyer</button>
+  <h2>🔧 FDM Maintenance</h2>
+  <p style="text-align:center;color:red;">* Champs obligatoires</p>
+  
+  <div class="section">
+    <h3>Equipement <span class="required">*</span></h3>
+    <input type="text" id="equipement">
+    <div id="equipementList" class="dropdown"></div>
+  </div>
+  
+  <div class="section">
+    <h3>Description panne <span class="required">*</span></h3>
+    <textarea id="description"></textarea>
+  </div>
+  
+  <div class="section">
+    <h3>Date de détection <span class="required">*</span></h3>
+    <input type="date" id="date">
+  </div>
+  
+  <div class="section">
+    <h3>Site de détection <span class="required">*</span></h3>
+    <input type="text" id="site">
+    <div id="siteList" class="dropdown"></div>
+  </div>
+  
+  <div class="section">
+    <h3>Matériel utilisable <span class="required">*</span></h3>
+    <select id="materiel">
+      <option value="">Choisir</option>
+      <option>Oui</option>
+      <option>Oui en mode dégradé</option>
+      <option>Non</option>
+    </select>
+  </div>
+  
+  <div class="section">
+    <h3>Action corrective immédiate</h3>
+    <textarea id="action1"></textarea>
+  </div>
+  
+  <div class="section">
+    <h3>Action à mettre en place</h3>
+    <textarea id="action2"></textarea>
+  </div>
+  
+  <div class="section">
+    <h3>Rédacteur <span class="required">*</span></h3>
+    <input type="text" id="redacteur">
+  </div>
+  
+  <button onclick="envoyer()">✅ Envoyer la fiche</button>
 
 <script>
 
