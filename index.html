@@ -52,6 +52,21 @@ h2 {
   position: relative;
 }
 
+/* ✅ champs plus petits */
+.field.small {
+  max-width: 150px;
+}
+
+input.small {
+  max-width: 150px;
+}
+
+/* ✅ champ moyen */
+input.medium {
+  max-width: 250px;
+}
+
+
 /* ✅ inputs propres */
 input, textarea, select {
   width: 100%;
@@ -154,15 +169,15 @@ textarea {
 <div class="row">
   <div class="label">Date *</div>
   <div class="field">
-    <input type="date" id="date">
+    <input type="date" id="date" class="small">
   </div>
 </div>
 
 <div class="row">
   <div class="label">Site *</div>
-  <div class="field">
-    <input type="text" id="site">
-    <div id="siteList" class="dropdown"></div>
+    <div class="field small">
+      <input type="text" id="site">
+      <div id="siteList" class="dropdown"></div>
   </div>
 </div>
 
@@ -197,7 +212,7 @@ textarea {
 <div class="row">
   <div class="label">Rédacteur *</div>
   <div class="field">
-    <input type="text" id="redacteur">
+    <input type="text" id="redacteur" class="medium">
   </div>
 </div>
 
