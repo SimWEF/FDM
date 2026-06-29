@@ -148,13 +148,25 @@ textarea {
 
 <div class="container">
 
-<h2>🔧 FDM</h2>
+<h2>🔧 Fiches de Maintenance (Page TEST)</h2>
 <p class="info">* obligatoires</p>
 
 <div class="row">
   <div class="label">Equipement *</div>
   <div class="field">
-    <input type="text" id="equipement">
+    
+  <input type="text" style="display:none">
+  
+    <input 
+      type="text"
+      id="equipement"
+      name="random_12345_equipement"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+    >
+
     <div id="equipementList" class="dropdown"></div>
   </div>
 </div>
@@ -176,8 +188,17 @@ textarea {
 <div class="row">
   <div class="label">Site *</div>
     <div class="field small">
-      <input type="text" id="site">
-      <div id="siteList" class="dropdown"></div>
+    <input type="text" style="display:none">
+      <input 
+        type="text"
+        id="site"
+        name="random_12345_site"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      >
+    <div id="siteList" class="dropdown"></div>
   </div>
 </div>
 
@@ -222,6 +243,14 @@ textarea {
 
 <script>
 
+// Ignorer accents
+function normalize(str) {
+return str
+  .toLowerCase()
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "");
+}
+
 // ✅ globals
 let equipements = [];
 let sites = [];
@@ -245,24 +274,47 @@ function createAutocomplete(inputId, listId, dataList) {
   input.addEventListener("focus", () => showList(""));
   input.addEventListener("input", () => showList(input.value));
 
-  function showList(filter) {
-
-    const val = filter.toLowerCase();
-
-    const results = dataList
-      .filter(item => item.toLowerCase().includes(val))
-      .slice(0, 200);
-
+    function showList(filter) {
+  
+    const val = normalize(filter);
+  
+    // transformer liste
+    let results = dataList.map(item => ({
+      original: item,
+      normalized: normalize(item)
+    }));
+  
+    // 🔥 tri intelligent
+    results.sort((a, b) => {
+  
+      const aStarts = a.normalized.startsWith(val);
+      const bStarts = b.normalized.startsWith(val);
+  
+      if (aStarts && !bStarts) return -1;
+      if (!aStarts && bStarts) return 1;
+  
+      const aIncludes = a.normalized.includes(val);
+      const bIncludes = b.normalized.includes(val);
+  
+      if (aIncludes && !bIncludes) return -1;
+      if (!aIncludes && bIncludes) return 1;
+  
+      return a.original.localeCompare(b.original);
+    });
+  
+    // limiter nombre
+    results = results.slice(0, 200);
+  
     if (results.length === 0) {
       list.innerHTML = "<div>Aucun résultat</div>";
     } else {
       list.innerHTML = results.map(item => `
-        <div onclick="selectItem('${item.replace(/'/g, "\\'")}', '${inputId}', '${listId}')">
-          ${item}
+        <div onclick="selectItem('${item.original.replace(/'/g, "\\'")}', '${inputId}', '${listId}')">
+          ${item.original}
         </div>
       `).join("");
     }
-
+  
     list.style.display = "block";
   }
 }
