@@ -251,6 +251,122 @@ return str
   .replace(/[\u0300-\u036f]/g, "");
 }
 
+//Recherche Intelligente
+function editDistance(a, b) {
+  const dp = [];
+
+  for (let i = 0; i <= a.length; i++) {
+    dp[i] = [];
+    dp[i][0] = i;
+  }
+
+  for (let j = 0; j <= b.length; j++) {
+    dp[0][j] = j;
+  }
+
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + cost
+      );
+
+      // Tolérance inversion de deux lettres
+      if (
+        i > 1 &&
+        j > 1 &&
+        a[i - 1] === b[j - 2] &&
+        a[i - 2] === b[j - 1]
+      ) {
+        dp[i][j] = Math.min(dp[i][j], dp[i - 2][j - 2] + 1);
+      }
+    }
+  }
+
+  return dp[a.length][b.length];
+}
+
+function wordScore(searchWord, targetWord) {
+  if (!searchWord) return 1;
+
+  if (targetWord === searchWord) return 120;
+  if (targetWord.startsWith(searchWord)) return 100;
+  if (targetWord.includes(searchWord)) return 80;
+
+  // On compare aussi avec le début du mot cible
+  const targetPrefix = targetWord.substring(0, searchWord.length);
+
+  const distFull = editDistance(searchWord, targetWord);
+  const distPrefix = editDistance(searchWord, targetPrefix);
+
+  const dist = Math.min(distFull, distPrefix);
+
+  let threshold = 0;
+
+  if (searchWord.length <= 3) {
+    threshold = 0;
+  } else if (searchWord.length <= 5) {
+    threshold = 1;
+  } else if (searchWord.length <= 9) {
+    threshold = 2;
+  } else {
+    threshold = 3;
+  }
+
+  if (dist <= threshold) {
+    return 60 - dist * 10;
+  }
+
+  return 0;
+}
+
+function itemScore(search, item) {
+  const query = normalize(search);
+  const text = normalize(item);
+
+  if (!query) return 1;
+
+  const queryWords = query.split(/\s+/).filter(Boolean);
+  const textWords = text.split(/\s+/).filter(Boolean);
+
+  let totalScore = 0;
+
+  for (const qWord of queryWords) {
+    let bestWordScore = 0;
+
+    for (const tWord of textWords) {
+      const score = wordScore(qWord, tWord);
+      if (score > bestWordScore) {
+        bestWordScore = score;
+      }
+    }
+
+    // Si un des mots tapés ne matche rien, on rejette l'élément
+    if (bestWordScore === 0) {
+      return 0;
+    }
+
+    totalScore += bestWordScore;
+  }
+
+  // Bonus si la chaîne complète commence pareil
+  if (text.startsWith(query)) {
+    totalScore += 50;
+  }
+
+  // Bonus si la chaîne complète contient la recherche
+  if (text.includes(query)) {
+    totalScore += 30;
+  }
+
+  return totalScore;
+}
+
+
+
 // ✅ globals
 let equipements = [];
 let sites = [];
@@ -274,49 +390,38 @@ function createAutocomplete(inputId, listId, dataList) {
   input.addEventListener("focus", () => showList(""));
   input.addEventListener("input", () => showList(input.value));
 
-    function showList(filter) {
-  
-    const val = normalize(filter);
-  
-    // transformer liste
-    let results = dataList.map(item => ({
-      original: item,
-      normalized: normalize(item)
-    }));
-  
-    // 🔥 tri intelligent
-    results.sort((a, b) => {
-  
-      const aStarts = a.normalized.startsWith(val);
-      const bStarts = b.normalized.startsWith(val);
-  
-      if (aStarts && !bStarts) return -1;
-      if (!aStarts && bStarts) return 1;
-  
-      const aIncludes = a.normalized.includes(val);
-      const bIncludes = b.normalized.includes(val);
-  
-      if (aIncludes && !bIncludes) return -1;
-      if (!aIncludes && bIncludes) return 1;
-  
-      return a.original.localeCompare(b.original);
-    });
-  
-    // limiter nombre
-    results = results.slice(0, 200);
-  
-    if (results.length === 0) {
-      list.innerHTML = "<div>Aucun résultat</div>";
-    } else {
-      list.innerHTML = results.map(item => `
-        <div onclick="selectItem('${item.original.replace(/'/g, "\\'")}', '${inputId}', '${listId}')">
-          ${item.original}
-        </div>
-      `).join("");
+function showList(filter) {
+  const val = normalize(filter);
+
+  let results = dataList.map(item => ({
+    original: item,
+    score: itemScore(val, item)
+  }));
+
+  results = results.filter(r => r.score > 0);
+
+  results.sort((a, b) => {
+    if (b.score !== a.score) {
+      return b.score - a.score;
     }
-  
-    list.style.display = "block";
+
+    return a.original.localeCompare(b.original);
+  });
+
+  results = results.slice(0, 100);
+
+  if (results.length === 0) {
+    list.innerHTML = "<div>Aucun résultat</div>";
+  } else {
+    list.innerHTML = results.map(item => `
+      <div onclick="selectItem('${item.original.replace(/'/g, "\\'")}', '${inputId}', '${listId}')">
+        ${item.original}
+      </div>
+    `).join("");
   }
+
+  list.style.display = "block";
+}
 }
 
 // ✅ sélection item
